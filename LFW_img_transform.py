@@ -1,30 +1,27 @@
 import os
 import cv2
+import numpy as np
 import pickle
 
-dirFolder = 'IMFDB_final'
+dirFolder = 'IMFDB_FIXED'
 imgX = 64
 imgY = 64
 
 dirFolder += '/'
 people = os.listdir(dirFolder)
 # data structure to hold img information
-imgData = []
+# imgData = []
 # read through all images
 for personName in people:
     personPath = dirFolder + personName
-    if os.path.isdir(personPath):
-        personMovies = os.listdir(personPath)
-        for movie in personMovies:
-            moviePath = personPath + '/' + movie + '/images/'
-            if os.path.isdir(moviePath):
-                personImgs = os.listdir(moviePath)
-                for img in personImgs:
-                    imgPath = moviePath + img
-                    img = cv2.imread(imgPath,0)
-                    img_m = cv2.resize(img,(imgX,imgY))
-                    imgData += [img_m]
-                    cv2.imwrite((imgPath[:len(imgPath)-4]) + '_m.jpg' ,img_m)
+    personImgs = os.listdir(personPath)
+    for imgName in personImgs:
+        if imgName[len(imgName)-4:] == '.jpg' and imgName[len(imgName)-6:len(imgName)-4] != '_m' :
+            imgPath = personPath + '/' + imgName
+            img = cv2.imread(imgPath,0)
+            img_m = cv2.resize(img,(imgX,imgY))
+            # imgData += [img_m]
+            cv2.imwrite((imgPath[:len(imgPath)-4]) + '_m.jpg' ,img_m)
 
 
 # pickle image data into file
